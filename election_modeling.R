@@ -10,7 +10,7 @@ huffpolls <- fromJSON(url)
 df <- as.data.frame(huffpolls)
 huffrows <- nrow(huffpolls) 
 
-if (huffrows < 10) {
+if (huffrows <= 10) {
   page = (page + 1)
   print(page)
 }
@@ -30,8 +30,8 @@ sd
 ### monte carlo simulation 
 runs <- 200000
 sim <- rnorm(runs, mean=p, sd=sd)
-histogram
-sim <- sum(sims >= 3 & sims <= 6)/runs
+hist(sim)
+sim <- sum(sim >= 3 & sims <= 6)/runs
 
 
 
