@@ -24,6 +24,32 @@ clintonpres <- subset(prespolldata, choice=="Clinton")
 trumppres <- subset(prespolldata, choice=="Trump")
 other <- subset(prespolldata, choice=="Trump")
 
+finalpolls <- rbind(clintonpres, trumppres)
+
+### map with ggplot2 | Editing
+ggplot(data = finalpolls, aes(x = end_date, y = value, group=choice, color = choice)) +
+  geom_point(shape = 1) +
+  geom_smooth(method = "loess", size = 1.5) +
+  scale_x_date("date") +
+  scale_color_manual(values = c("Clinton" = "black", "Trump" = "red"))  
+
+
+### map with ggplot2 | Working
+(ggplot()
++geom_point(data = finalpolls, mapping = aes(y = value, x = end_date, color = choice, group = choice), alpha = 0.3)
++ scale_x_date("date")
++ geom_smooth(y = value, x = end_date, group = choice)
++ scale_color_manual(values = c("Clinton" = "black", "Trump" = "red"))  
+)
+
+
+### NOT WORKING ###
+ggplot(data = finalpolls, aes(y = value, x = end_date, color = choice, group = choice))
++ geom_point(data = finalpolls, mapping = aes(y = value, x = end_date, color = choice), alpha = 0.3)
++ scale_x_date("date")
++ scale_color_manual(values = c("Clinton" = "black", "Trump" = "red"))  
+
+
 
 ### load libraries
 library(jsonlite)
