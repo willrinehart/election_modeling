@@ -21,15 +21,22 @@ prespolldata <- merge(questions, polldata$polls, by = "id")
 prespolldata$sd <- 100 * (sqrt((prespolldata$value/100)*(1-(prespolldata$value/100))/prespolldata$observations))
 
 ### subset data for each candidate
-clintonpres <- subset(prespolldata, choice=="Clinton")
-trumppres <- subset(prespolldata, choice=="Trump")
-other <- subset(prespolldata, choice=="Trump")
+clintonpres <- prespolldata[grep("Clinton", prespolldata$choice),]
+trumppres <- prespolldata[grep("Trump", prespolldata$choice),]
+johnsonpres <- prespolldata[grep("Johnson", prespolldata$choice),]
 
-### calculate weights | 
+### rename columns
+clintonpres$choice <- "Clinton" 
+trumppres$choice <- "Trump"
+johnsonpres$choice <- "Johnson"
+
+### calculate weights 
 clintonpres$timediff <- (Sys.Date() - clintonpres$end_date)
 clintonpres$weights <- 1/(as.numeric(clintonpres$timediff) + 1)
 trumppres$timediff <- (Sys.Date() - trumppres$end_date)
 trumppres$weights <- 1/(as.numeric(trumppres$timediff) + 1)
+johnsonpres$timediff <- (Sys.Date() - johnsonpres$end_date)
+johnsonpres$weights <- 1/(as.numeric(johnsonpres$timediff) + 1)
 
 ### calculate weighted mean and standard deviation
 clintonwtdmean <- wtd.mean(clintonpres$value, clintonpres$weights)
@@ -38,9 +45,12 @@ clintonwtdsd <- sqrt(clintonwtdvar)
 trumpwtdmean <- wtd.mean(trumppres$value, trumppres$weights)
 trumpwtdvar <- wtd.var(trumppres$value, trumppres$weights)
 trumpwtdsd <- sqrt(trumpwtdvar)
+johnsonwtdmean <- wtd.mean(jonsonpres$value, johnsonpres$weights)
+johnsonwtdvar <- wtd.var(jonsonpres$value, johnsonpres$weights)
+johnsonwtdsd <- sqrt(johnsonwtdvar)
 
 ### combine polls
-finalpolls <- rbind(clintonpres, trumppres)
+finalpolls <- rbind(clintonpres, trumppres, johnsonpres)
 
 ### monte carlo simulation 
 runs <- 200000
@@ -53,4 +63,4 @@ ggplot(data = finalpolls, aes(x = end_date, y = value, group=choice, color = cho
   geom_point(shape = 1) +
   geom_smooth(method = "loess", size = 1.5) +
   scale_x_date("date") +
-  scale_color_manual(values = c("Clinton" = "black", "Trump" = "red"))  
+  scale_color_manual(values = c("Clinton" = "blue", "Trump" = "red", "Johnson" = "yellow"))  
