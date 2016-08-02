@@ -10,9 +10,7 @@ library(Hmisc)
 
 ### API get with pollstR | https://cran.r-project.org/web/packages/pollstR/vignettes/introduction.html
 polldata <- pollstr_polls(max_pages = 10000, after = "2016-01-01")
-questions <- subset(polldata$questions, state=="US"
-                    & topic=="2016-president"  
-                    & subpopulation %in% c("Adults", "Likely Voters", "Registered Voters"))
+questions <- subset(polldata$questions, state=="US" & topic=="2016-president" & code=="16-US-Pres-GE TrumpvClinton" & name %in% c("Adults", "Likely Voters", "Registered Voters"))
 
 ### merge data
 prespolldata <- merge(questions, polldata$polls, by = "id")
@@ -45,8 +43,8 @@ clintonwtdsd <- sqrt(clintonwtdvar)
 trumpwtdmean <- wtd.mean(trumppres$value, trumppres$weights)
 trumpwtdvar <- wtd.var(trumppres$value, trumppres$weights)
 trumpwtdsd <- sqrt(trumpwtdvar)
-johnsonwtdmean <- wtd.mean(jonsonpres$value, johnsonpres$weights)
-johnsonwtdvar <- wtd.var(jonsonpres$value, johnsonpres$weights)
+johnsonwtdmean <- wtd.mean(johnsonpres$value, johnsonpres$weights)
+johnsonwtdvar <- wtd.var(johnsonpres$value, johnsonpres$weights)
 johnsonwtdsd <- sqrt(johnsonwtdvar)
 
 ### combine polls
@@ -62,5 +60,6 @@ sim <- sum(sim >= 3 & sims <= 6)/runs
 ggplot(data = finalpolls, aes(x = end_date, y = value, group=choice, color = choice)) +
   geom_point(shape = 1) +
   geom_smooth(method = "loess", size = 1.5) +
-  scale_x_date("date") +
-  scale_color_manual(values = c("Clinton" = "blue", "Trump" = "red", "Johnson" = "yellow"))  
+  scale_color_manual(values = c("Clinton" = "blue", "Trump" = "red", "Johnson" = "yellow")) + 
+  labs(title = "Average of All Polls", x = "Date of Poll", y = "Percent Supporting Candidate", color = "Candidate")
+
