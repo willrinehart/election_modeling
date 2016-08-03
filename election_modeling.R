@@ -1,4 +1,4 @@
-### William Rinehart | @willrinehart | July 2016 | william.eric.rinehart@gmail.com
+### William Rinehart | @willrinehart | July 2016
 ### load libraries
 library(jsonlite)
 library(lubridate)
