@@ -50,16 +50,9 @@ johnsonwtdsd <- sqrt(johnsonwtdvar)
 ### combine polls
 finalpolls <- rbind(clintonpres, trumppres, johnsonpres)
 
-### monte carlo simulation 
-runs <- 200000
-sim <- rnorm(runs, mean=p, sd=sd)
-hist(sim)
-sim <- sum(sim >= 3 & sims <= 6)/runs
-
 ### map with ggplot2 | Editing
 ggplot(data = finalpolls, aes(x = end_date, y = value, group=choice, color = choice)) +
   geom_point(shape = 1) +
   geom_smooth(method = "loess", size = 1.5) +
   scale_color_manual(values = c("Clinton" = "blue", "Trump" = "red", "Johnson" = "yellow")) + 
   labs(title = "Average of All Polls", x = "Date of Poll", y = "Percent Supporting Candidate", color = "Candidate")
-
