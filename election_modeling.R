@@ -8,6 +8,9 @@ library(reshape)
 library(ggplot2)
 library(Hmisc)
 
+###read in electoral college data
+electoral_votes <- read.csv("electoral_college_data.csv", header = TRUE)
+
 ### API get with pollstR | https://cran.r-project.org/web/packages/pollstR/vignettes/introduction.html
 polldata <- pollstr_polls(max_pages = 10000, after = "2016-01-01")
 questions <- subset(polldata$questions, state=="US" & topic=="2016-president" & code=="16-US-Pres-GE TrumpvClinton" & name %in% c("Adults", "Likely Voters", "Registered Voters"))
@@ -56,3 +59,11 @@ ggplot(data = finalpolls, aes(x = end_date, y = value, group=choice, color = cho
   geom_smooth(method = "loess", size = 1.5) +
   scale_color_manual(values = c("Clinton" = "blue", "Trump" = "red", "Johnson" = "yellow")) + 
   labs(title = "Average of All Polls", x = "Date of Poll", y = "Percent Supporting Candidate", color = "Candidate")
+
+### state level creation 
+state_data <- subset(polldata$questions, topic=="2016-president" & name %in% c("Adults", "Likely Voters", "Registered Voters"))
+state_data <- state_data[!state_data$state=="US", ]
+state_data <- na.omit(state_data)
+
+state_data <- merge(state_data, polldata$polls, by = "id")
+table(state_data$state)
