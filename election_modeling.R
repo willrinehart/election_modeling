@@ -14,7 +14,7 @@ library(Hmisc)
 electoral_votes <- read.csv("electoral_college_data.csv", header = TRUE)
 
 ### API get with pollstR | https://cran.r-project.org/web/packages/pollstR/vignettes/introduction.html
-polldata <- pollstr_polls(max_pages = Inf, after = "2016-01-01")
+polldata <- pollster_polls(topic ='2016-president', max_pages = Inf)
 questions <- subset(polldata$questions, state=="US" & topic=="2016-president" & code=="16-US-Pres-GE TrumpvClinton" & name %in% c("Adults", "Likely Voters", "Registered Voters"))
 
 ### merge data
@@ -35,11 +35,11 @@ johnsonpres$choice <- "Johnson"
 
 ### calculate weights 
 clintonpres$timediff <- (Sys.Date() - clintonpres$end_date)
-clintonpres$weights <- 1/(as.numeric(clintonpres$timediff) + 1)
+clintonpres$weights <- 1/(as.numeric(clintonpres$timediff))
 trumppres$timediff <- (Sys.Date() - trumppres$end_date)
-trumppres$weights <- 1/(as.numeric(trumppres$timediff) + 1)
+trumppres$weights <- 1/(as.numeric(trumppres$timediff))
 johnsonpres$timediff <- (Sys.Date() - johnsonpres$end_date)
-johnsonpres$weights <- 1/(as.numeric(johnsonpres$timediff) + 1)
+johnsonpres$weights <- 1/(as.numeric(johnsonpres$timediff))
 
 ### calculate weighted mean and standard deviation
 clintonwtdmean <- wtd.mean(clintonpres$value, clintonpres$weights)
