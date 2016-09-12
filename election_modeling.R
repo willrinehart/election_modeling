@@ -6,13 +6,15 @@ library(XML)
 library(pollstR)
 library(reshape)
 library(ggplot2)
+library(dplyr)
+library(tidyr)
 library(Hmisc)
 
 ###read in electoral college data
 electoral_votes <- read.csv("electoral_college_data.csv", header = TRUE)
 
 ### API get with pollstR | https://cran.r-project.org/web/packages/pollstR/vignettes/introduction.html
-polldata <- pollstr_polls(max_pages = 10000, after = "2016-01-01")
+polldata <- pollstr_polls(max_pages = Inf, after = "2016-01-01")
 questions <- subset(polldata$questions, state=="US" & topic=="2016-president" & code=="16-US-Pres-GE TrumpvClinton" & name %in% c("Adults", "Likely Voters", "Registered Voters"))
 
 ### merge data
